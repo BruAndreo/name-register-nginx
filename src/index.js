@@ -1,23 +1,15 @@
-const express = require("express");
-const mysql = require("mysql");
+import express from "express";
+import randomName from "random-name";
+import db from "./connection.js";
 
 const app = express()
 const port = 3000
-const config = {
-    host: 'db',
-    user: 'root',
-    password: 'root',
-    database: 'nodedb'
-};
 
-const connection = mysql.createConnection(config);
-const sql = `INSERT INTO people(name) values ('Bruno')`;
+app.get('/', async (req, res) => {
+    await db.newName(randomName.first());
+    const names = await db.getNames();
 
-connection.query(sql);
-connection.end();
-
-app.get('/', (req, res) => {
-    res.send('<h1>Full Cycle</h1>');
+    res.send(`<h1>Full Cycle</h1> <p>${names.join('</br>')}</p>`);
 });
 
 app.listen(port, () => console.log(`Rodando na porta ${port}`));

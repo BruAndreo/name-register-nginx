@@ -20,16 +20,25 @@ services:
     build:
       context: .
     container_name: app
-    # entrypoint: wait-for db:3306 -t 60 -- ./start.sh
     networks:
       - nodenet
     volumes:
       - .:/usr/src/app
     tty: true
-    ports:
-      - "3000:3000"
     depends_on:
       - db
+
+  nginx:
+    build:
+      context: infra
+    container_name: nginx
+    networks:
+      - nodenet
+    tty: true
+    ports:
+      - "8080:80"
+    depends_on:
+      - app
 
 
 networks:

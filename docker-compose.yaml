@@ -10,6 +10,7 @@ services:
     tty: true
     volumes:
       - ./mysql:/var/lib/mysql
+      - ./dump:/docker-entrypoint-initdb.d
     environment:
       - MYSQL_DATABASE=nodedb
       - MYSQL_ROOT_PASSWORD=root
@@ -20,6 +21,7 @@ services:
     build:
       context: .
     container_name: app
+    entrypoint: wait-for db:3306 -t 30 -- sh /usr/src/app/entrypoint.sh
     networks:
       - nodenet
     volumes:
